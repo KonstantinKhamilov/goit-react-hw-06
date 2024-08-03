@@ -1,3 +1,4 @@
+// store.js
 import { createStore, combineReducers } from "redux";
 import contactsReducer from "./contactsReducer";
 

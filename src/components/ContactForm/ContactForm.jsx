@@ -1,13 +1,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { nanoid } from "nanoid";
-import { useDispatch, useSelector } from "react-redux";
-import { addContact } from "../../redux/contactsSlice";
 
-const ContactForm = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.contacts.items);
-
+const ContactForm = ({ onAddContact }) => {
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -25,7 +20,7 @@ const ContactForm = () => {
     }),
     onSubmit: (values, { resetForm }) => {
       const newContact = { ...values, id: nanoid() };
-      dispatch(addContact(newContact));
+      onAddContact(newContact);
       resetForm();
     },
   });
@@ -36,31 +31,25 @@ const ContactForm = () => {
         Name:
         <input
           type="text"
-          name="name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
+          {...formik.getFieldProps("name")}
+          placeholder="Enter name"
         />
-        {formik.touched.name && formik.errors.name ? (
+        {formik.touched.name && formik.errors.name && (
           <div>{formik.errors.name}</div>
-        ) : null}
+        )}
       </label>
-
       <label>
         Number:
         <input
           type="text"
-          name="number"
-          value={formik.values.number}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
+          {...formik.getFieldProps("number")}
+          placeholder="Enter number"
         />
-        {formik.touched.number && formik.errors.number ? (
+        {formik.touched.number && formik.errors.number && (
           <div>{formik.errors.number}</div>
-        ) : null}
+        )}
       </label>
-
-      <button type="submit">Add Contact</button>
+      <button type="submit">Add contact</button>
     </form>
   );
 };

@@ -25,6 +25,14 @@ function App() {
   }, [contacts]);
 
   const handleAddContact = (newContact) => {
+    const existingContact = contacts.find(
+      (contact) =>
+        contact.name === newContact.name && contact.number === newContact.number
+    );
+    if (existingContact) {
+      alert("Контакт с таким именем и номером телефона уже существует!");
+      return;
+    }
     setContacts((prevContacts) => [...prevContacts, newContact]);
   };
 
@@ -52,4 +60,3 @@ function App() {
 }
 
 export default App;
-//переименовал папку компонентс
