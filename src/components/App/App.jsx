@@ -24,6 +24,10 @@ function App() {
     localStorage.setItem("contacts", JSON.stringify(contacts));
   }, [contacts]);
 
+  const updateContacts = (newContacts) => {
+    setContacts(newContacts);
+  };
+
   const handleAddContact = (newContact) => {
     const existingContact = contacts.find(
       (contact) =>
@@ -33,13 +37,11 @@ function App() {
       alert("Контакт с таким именем и номером телефона уже существует!");
       return;
     }
-    setContacts((prevContacts) => [...prevContacts, newContact]);
+    updateContacts([...contacts, newContact]);
   };
 
   const handleDeleteContact = (id) => {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== id)
-    );
+    updateContacts(contacts.filter((contact) => contact.id !== id));
   };
 
   const filteredContacts = contacts.filter((contact) =>

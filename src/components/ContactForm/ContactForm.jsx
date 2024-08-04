@@ -2,6 +2,22 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { nanoid } from "nanoid";
 
+const FormField = ({ label, name, formik }) => {
+  return (
+    <label>
+      {label}:
+      <input
+        type="text"
+        {...formik.getFieldProps(name)}
+        placeholder={`Enter ${label.toLowerCase()}`}
+      />
+      {formik.touched[name] && formik.errors[name] && (
+        <div>{formik.errors[name]}</div>
+      )}
+    </label>
+  );
+};
+
 const ContactForm = ({ onAddContact }) => {
   const formik = useFormik({
     initialValues: {
@@ -27,28 +43,8 @@ const ContactForm = ({ onAddContact }) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <label>
-        Name:
-        <input
-          type="text"
-          {...formik.getFieldProps("name")}
-          placeholder="Enter name"
-        />
-        {formik.touched.name && formik.errors.name && (
-          <div>{formik.errors.name}</div>
-        )}
-      </label>
-      <label>
-        Number:
-        <input
-          type="text"
-          {...formik.getFieldProps("number")}
-          placeholder="Enter number"
-        />
-        {formik.touched.number && formik.errors.number && (
-          <div>{formik.errors.number}</div>
-        )}
-      </label>
+      <FormField label="Name" name="name" formik={formik} />
+      <FormField label="Number" name="number" formik={formik} />
       <button type="submit">Add contact</button>
     </form>
   );
