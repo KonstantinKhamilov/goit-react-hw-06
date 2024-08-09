@@ -1,51 +1,38 @@
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { nanoid } from "nanoid";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contactsSlice.js";
 
-const FormField = ({ label, name, formik }) => {
-  return (
-    <label>
-      {label}:
-      <input
-        type="text"
-        {...formik.getFieldProps(name)}
-        placeholder={`Enter ${label.toLowerCase()}`}
-      />
-      {formik.touched[name] && formik.errors[name] && (
-        <div>{formik.errors[name]}</div>
-      )}
-    </label>
-  );
-};
+const ContactForm = () => {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const dispatch = useDispatch();
 
-const ContactForm = ({ onAddContact }) => {
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      number: "",
-    },
-    validationSchema: Yup.object({
-      name: Yup.string()
-        .required("Name is required")
-        .min(3, "Name must be at least 3 characters")
-        .max(50, "Name must be at most 50 characters"),
-      number: Yup.string()
-        .required("Number is required")
-        .min(3, "Number must be at least 3 characters")
-        .max(50, "Number must be at most 50 characters"),
-    }),
-    onSubmit: (values, { resetForm }) => {
-      const newContact = { ...values, id: nanoid() };
-      onAddContact(newContact);
-      resetForm();
-    },
-  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addContact({ name, number }));
+    setName("");
+    setNumber("");
+  };
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <FormField label="Name" name="name" formik={formik} />
-      <FormField label="Number" name="number" formik={formik} />
-      <button type="submit">Add contact</button>
+    <form onSubmit={handleSubmit}>
+      <label>
+        Имя:
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
+      <label>
+        Номер телефона:
+        <input
+          type="text"
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+        />
+      </label>
+      <button type="submit">Добавить</button>
     </form>
   );
 };
